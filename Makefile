@@ -1,9 +1,7 @@
 GOPATH=$(shell pwd)/vendor:$(shell pwd)
 GOBIN=$(shell pwd)/bin
 
-all: ./bin/influx_proxy
-
-./bin/influx_proxy: 
+all: 
 	go build -o ./bin/influx_proxy ./cmd/influx_proxy
 
 ./vendor:
@@ -14,4 +12,4 @@ all: ./bin/influx_proxy
 clean:
 	rm -rf bin
 
-.PHONY: clean update
+.PHONY: clean update all

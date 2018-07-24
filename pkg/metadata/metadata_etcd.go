@@ -2,6 +2,8 @@ package metadata
 
 import (
 	"../model"
+	"github.com/coreos/etcd/client"
+	"github.com/golang/glog"
 	"time"
 )
 
@@ -16,7 +18,13 @@ etcd objects layout:
 type MetaDataManager struct {
 }
 
-func NewMetaDataManager() *MetaDataManager {
+func NewMetaDataManager(etcdEndpoints []string, dialTimeout time.Duration) *MetaDataManager {
+	cli, err := client.New(client.Config{
+		Endpoints: etcdEndpoints,
+	})
+	if err != nil {
+		glog.Fatal(err)
+	}
 	mm := &MetaDataManager{}
 
 	return mm
@@ -24,4 +32,12 @@ func NewMetaDataManager() *MetaDataManager {
 
 func (mm *MetaDataManager) GetOrCreateShardGroup(start, end time.Time) (shardGroup *model.ShardGroup, err error) {
 	return nil, nil
+}
+
+func (mm *MetaDataManager) AddNode(addr string, hostName string) (id int64, err error) {
+
+}
+
+func (mm *MetaDataManager) UpdateNode(id int64, addr string, hostName string) (err error) {
+
 }
