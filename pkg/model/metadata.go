@@ -1,6 +1,7 @@
 package model
 
 import (
+	"fmt"
 	"time"
 )
 
@@ -37,4 +38,8 @@ type Node struct {
 	ID      int64
 	Address string
 	Host    string
+}
+
+func (n Node) HTTPAddress() string {
+	return fmt.Sprintf("http://%s", n.Address)
 }

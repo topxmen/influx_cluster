@@ -1,7 +1,7 @@
 GOPATH=$(shell pwd)/vendor:$(shell pwd)
 GOBIN=$(shell pwd)/bin
 
-all: 
+all: ./vendor
 	go build -o ./bin/influx_proxy ./cmd/influx_proxy
 
 ./vendor:
