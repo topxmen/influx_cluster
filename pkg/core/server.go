@@ -3,7 +3,7 @@ package core
 import (
 	"net/http"
 
-	"../metadata"
+	"../model"
 	"github.com/gin-gonic/gin"
 	"github.com/golang/glog"
 )
@@ -11,7 +11,7 @@ import (
 type ProxyServer struct {
 	addr            string
 	upstreamClient  *http.Client
-	metadataManager *metadata.MetaDataManager
+	metadataManager *model.MetaDataManager
 }
 
 func NewProxyServer(addr string) *ProxyServer {
@@ -52,9 +52,21 @@ func (ps *ProxyServer) pingHandler(ctx *gin.Context) {
 	}
 }
 
+type Response struct {
+	Code int         `json:"code"`
+	Data interface{} `json:"data"`
+}
+
 //metadata management
 func (ps *ProxyServer) listNodesHandler(ctx *gin.Context) {
+	var resp Response
+	defer func() {
+		ctx.JSON(http.StatusOK, resp)
+	}()
+	nodes := ps.metadataManager.ListNodes()
+	resp.Data = nodes
 
+	return
 }
 
 func (ps *ProxyServer) createNodeHandler(ctx *gin.Context) {

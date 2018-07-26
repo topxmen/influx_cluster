@@ -35,9 +35,9 @@ type Replica struct {
 Node is an individual host machine running influxdb instance
 */
 type Node struct {
-	ID      int64
-	Address string
-	Host    string
+	ID      int64  `json:"id"`
+	Address string `json:"address"`
+	Host    string `json:"host"`
 }
 
 func (n Node) HTTPAddress() string {
