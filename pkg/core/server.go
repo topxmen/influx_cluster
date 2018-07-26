@@ -28,9 +28,11 @@ func (ps *ProxyServer) Start() {
 		router := gin.New()
 		// Recovery middleware recovers from any panics and writes a 500 if there was one.
 		router.Use(gin.Recovery())
-
 		router.GET("/ping", ps.pingHandler)
 
+		//cluster management
+		router.GET("/cluster/nodes", ps.listNodesHandler)
+		router.POST("/cluster/nodes", ps.createNodeHandler)
 		glog.Fatal(router.Run(ps.addr))
 	}()
 }
@@ -48,4 +50,13 @@ func (ps *ProxyServer) pingHandler(ctx *gin.Context) {
 		}
 		break
 	}
+}
+
+//metadata management
+func (ps *ProxyServer) listNodesHandler(ctx *gin.Context) {
+
+}
+
+func (ps *ProxyServer) createNodeHandler(ctx *gin.Context) {
+
 }
