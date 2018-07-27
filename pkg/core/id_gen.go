@@ -7,9 +7,9 @@ import (
 
 var (
 	start           = time.Date(2018, 01, 01, 00, 00, 00, 0, time.UTC)
-	workerBitLen    = 10
+	workerBitLen    = 8
 	timestampBitLen = 48
-	seqBitLen       = 63 - workerBitLen - timestampBitLen
+	seqBitLen       = 64 - workerBitLen - timestampBitLen
 
 	maxSeqValue        uint64 = (1 << uint(seqBitLen)) - 1
 	maxWorkerValue     uint64 = (1 << uint(workerBitLen)) - 1
@@ -48,6 +48,6 @@ func (i *IDGenerator) New() uint64 {
 			i.sequence = 0
 			i.lastTimestamp = ts
 		}
-		return ((i.worker & maxWorkerValue) << uint(63-workerBitLen)) | ((i.lastTimestamp & maxTimestampBitLen) << uint(seqBitLen)) | (i.sequence & maxSeqValue)
+		return ((i.worker & maxWorkerValue) << uint(timestampBitLen+seqBitLen)) | ((i.lastTimestamp & maxTimestampBitLen) << uint(seqBitLen)) | (i.sequence & maxSeqValue)
 	}
 }
