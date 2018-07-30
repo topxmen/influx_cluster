@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"../metadata"
+	"../model"
 	"github.com/gin-gonic/gin"
 	"github.com/golang/glog"
 )
@@ -54,9 +55,25 @@ func (ps *ProxyServer) pingHandler(ctx *gin.Context) {
 
 //metadata management
 func (ps *ProxyServer) listNodesHandler(ctx *gin.Context) {
-
+	var resp Response
+	defer func() {
+		ctx.JSON(http.StatusOK, resp)
+	}()
+	resp.Data = ps.metadataManager.ListNodes()
+	return
 }
 
 func (ps *ProxyServer) createNodeHandler(ctx *gin.Context) {
+	var resp Response
+	defer func() {
+		ctx.JSON(http.StatusOK, resp)
+	}()
 
+	var node model.Node
+	err := ctx.BindJSON(&node)
+	if err != nil {
+		resp.Code = InvalidParameter
+		resp.Data = err.Error()
+		return
+	}
 }
