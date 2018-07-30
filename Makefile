@@ -1,10 +1,10 @@
 GOPATH=$(shell pwd)/vendor:$(shell pwd)
 GOBIN=$(shell pwd)/bin
 
-all: ./vendor
+all: ./vendor/src
 	go build -o ./bin/influx_proxy ./cmd/influx_proxy
 
-./vendor:
+./vendor/src: 
 	test -d ./vendor/src || mkdir -p ./vendor/src
 	glide install
 	test -d ./vendor/src || (mkdir ./src && mv ./vendor/* ./src && mv ./src ./vendor)
