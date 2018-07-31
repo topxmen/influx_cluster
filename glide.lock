@@ -1,19 +1,15 @@
-hash: cbcff1ecefb846809f805f79a1f35e8d65db024deb1446ef27fffdaf1b85a183
-updated: 2018-07-25T15:15:26.011013+08:00
+hash: 28d3374393e6ec8373c2c56eab90228f0e5789de2c257ea6675cd224283922ea
+updated: 2018-07-31T11:44:27.277399+08:00
 imports:
 - name: github.com/coreos/etcd
   version: fca8add78a9d926166eb739b8e4a124434025ba3
   subpackages:
-  - client
+  - auth/authpb
   - clientv3
-  - pkg/pathutil
-  - pkg/srv
+  - etcdserver/api/v3rpc/rpctypes
+  - etcdserver/etcdserverpb
+  - mvcc/mvccpb
   - pkg/types
-  - version
-- name: github.com/coreos/go-semver
-  version: 8ab6407b697782a06568d4b7f1db25550ec2e4c6
-  subpackages:
-  - semver
 - name: github.com/gin-contrib/sse
   version: 22d885f9ecc78bf4ee5d72b937e4bbcdc58e8cae
 - name: github.com/gin-gonic/gin
@@ -21,6 +17,12 @@ imports:
   subpackages:
   - binding
   - render
+- name: github.com/gogo/protobuf
+  version: 342cbe0a04158f6dcb03ca0079991a51a4248c02
+  subpackages:
+  - gogoproto
+  - proto
+  - protoc-gen-gogo/descriptor
 - name: github.com/golang/glog
   version: 23def4e6c14b4da8ac2ed8007337bc5eb5007998
 - name: github.com/golang/protobuf
@@ -28,16 +30,62 @@ imports:
   subpackages:
   - jsonpb
   - proto
+  - ptypes
+  - ptypes/any
+  - ptypes/duration
+  - ptypes/timestamp
 - name: github.com/mattn/go-isatty
   version: 6ca4dbf54d38eea1a992b3c722a76a5d1c4cb25c
 - name: github.com/ugorji/go
   version: bdcc60b419d136a85cdf2e7cbcac34b3f1cd6e57
   subpackages:
   - codec
+- name: golang.org/x/net
+  version: 66aacef3dd8a676686c7ae3716979581e8b03c47
+  subpackages:
+  - context
+  - http2
+  - http2/hpack
+  - idna
+  - internal/timeseries
+  - lex/httplex
+  - trace
 - name: golang.org/x/sys
   version: ebfc5b4631820b793c9010c87fd8fef0f39eb082
   subpackages:
   - unix
+- name: golang.org/x/text
+  version: b19bf474d317b857955b12035d2c5acb57ce8b01
+  subpackages:
+  - secure/bidirule
+  - transform
+  - unicode/bidi
+  - unicode/norm
+- name: google.golang.org/genproto
+  version: 09f6ed296fc66555a25fe4ce95173148778dfa85
+  subpackages:
+  - googleapis/rpc/status
+- name: google.golang.org/grpc
+  version: 5b3c4e850e90a4cf6a20ebd46c8b32a0a3afcb9e
+  subpackages:
+  - balancer
+  - codes
+  - connectivity
+  - credentials
+  - grpclb/grpc_lb_v1/messages
+  - grpclog
+  - health
+  - health/grpc_health_v1
+  - internal
+  - keepalive
+  - metadata
+  - naming
+  - peer
+  - resolver
+  - stats
+  - status
+  - tap
+  - transport
 - name: gopkg.in/go-playground/validator.v8
   version: 5f1438d3fca68893a817e4a66806cea46a9e4ebf
 - name: gopkg.in/yaml.v2

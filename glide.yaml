@@ -1,11 +1,9 @@
 package: .
 import:
 - package: github.com/coreos/etcd
-  version: ~3.3.8
+  version: v3.3.9
   subpackages:
   - clientv3
+- package: github.com/gin-gonic/gin
+  version: v1.2
 - package: github.com/golang/glog
-- package: github.com/coreos/go-semver
-  version: ~0.2.0
-  subpackages:
-  - semver

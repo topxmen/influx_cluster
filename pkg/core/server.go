@@ -2,8 +2,10 @@ package core
 
 import (
 	"net/http"
+	"time"
 
 	"../model"
+	"../util"
 	"github.com/gin-gonic/gin"
 	"github.com/golang/glog"
 )
@@ -14,9 +16,11 @@ type ProxyServer struct {
 	metadataManager *model.MetaDataManager
 }
 
-func NewProxyServer(addr string) *ProxyServer {
+func NewProxyServer(addr string, etcdEndpoints []string, etcdDailTimeout time.Duration, serverID uint64) *ProxyServer {
 	ps := &ProxyServer{
-		upstreamClient: &http.Client{},
+		upstreamClient:  &http.Client{},
+		addr:            addr,
+		metadataManager: model.NewMetaDataManager(etcdEndpoints, etcdDailTimeout, util.NewIDGenerator(serverID)),
 	}
 
 	return ps
@@ -40,7 +44,11 @@ func (ps *ProxyServer) Start() {
 
 func (ps *ProxyServer) pingHandler(ctx *gin.Context) {
 	request := *ctx.Request
-	nodes := ps.metadataManager.ListNodes()
+	nodes, err := ps.metadataManager.ListNodes()
+	if err != nil {
+		ctx.Status(http.StatusInternalServerError)
+		return
+	}
 	for _, node := range nodes {
 		request.URL.Host = node.Address
 		resp, err := ps.upstreamClient.Do(&request)
@@ -59,7 +67,13 @@ func (ps *ProxyServer) listNodesHandler(ctx *gin.Context) {
 	defer func() {
 		ctx.JSON(http.StatusOK, resp)
 	}()
-	resp.Data = ps.metadataManager.ListNodes()
+	nodes, err := ps.metadataManager.ListNodes()
+	if err != nil {
+		resp.Code = InternalServerError
+		resp.Data = err.Error()
+	}
+
+	resp.Data = nodes
 	return
 }
 

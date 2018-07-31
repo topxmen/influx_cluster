@@ -1,10 +1,14 @@
 package model
 
 import (
-	"../util"
+	"context"
+	"encoding/json"
+	"fmt"
 	"time"
 
-	"github.com/coreos/etcd/client"
+	"../util"
+
+	"github.com/coreos/etcd/clientv3"
 	"github.com/golang/glog"
 )
 
@@ -16,20 +20,26 @@ etcd objects layout:
 /influx_cluster/nodes
 
 */
+const (
+	prefix    = "/influx_cluster"
+	nodesPath = prefix + "/nodes"
+)
+
 type MetaDataManager struct {
-	etcdCli client.Client
+	etcdCli clientv3.KV
 	idGen   *util.IDGenerator
 }
 
 func NewMetaDataManager(etcdEndpoints []string, dialTimeout time.Duration, idGen *util.IDGenerator) *MetaDataManager {
-	cli, err := client.New(client.Config{
-		Endpoints: etcdEndpoints,
+	cli, err := clientv3.New(clientv3.Config{
+		Endpoints:   etcdEndpoints,
+		DialTimeout: dialTimeout,
 	})
 	if err != nil {
 		glog.Fatal(err)
 	}
 	mm := &MetaDataManager{
-		etcdCli: cli,
+		etcdCli: clientv3.NewKV(cli),
 		idGen:   idGen,
 	}
 
@@ -40,14 +50,27 @@ func (mm *MetaDataManager) GetOrCreateShardGroup(start, end time.Time) (shardGro
 	return nil, nil
 }
 
-func (mm *MetaDataManager) AddNode(node Node) (id int64, err error) {
-	return 0, nil
+func (mm *MetaDataManager) AddNode(node Node) (id uint64, err error) {
+	node.ID = mm.idGen.New()
+	err = mm.UpdateNode(node)
+	if err != nil {
+		return 0, err
+	}
+
+	return node.ID, nil
 }
 
 func (mm *MetaDataManager) UpdateNode(node Node) (err error) {
+	js, _ := json.Marshal(node)
+	_, err = mm.etcdCli.Put(context.TODO(), fmt.Sprintf("%s/%d", nodesPath, node.ID), string(js))
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
-func (mm *MetaDataManager) ListNodes() []Node {
-	return nil
+func (mm *MetaDataManager) ListNodes() ([]Node, error) {
+	//TODO:
+	return nil, nil
 }

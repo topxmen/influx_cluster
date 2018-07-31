@@ -11,7 +11,7 @@ If there are N data nodes in the cluster and the replication factor is X, then N
 This means that a new shard group will get created for each day of data that gets written in.
 */
 type ShardGroup struct {
-	ID     int64
+	ID     uint64
 	Start  time.Time
 	End    time.Time
 	Shards []Shard
@@ -28,14 +28,14 @@ type Shard struct {
 Replica is an individual replica from a Shard, each replica is mapping to a storage data in a Node.
 */
 type Replica struct {
-	NodeID int64
+	NodeID uint64
 }
 
 /*
 Node is an individual host machine running influxdb instance
 */
 type Node struct {
-	ID      int64  `json:"id"`
+	ID      uint64 `json:"id"`
 	Address string `json:"address"`
 	Host    string `json:"host"`
 }
